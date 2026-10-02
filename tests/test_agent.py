@@ -91,6 +91,8 @@ async def test_memory_outage_still_answers_and_says_so(workspace_root):
     assert events[1]["available"] is False
     assert events[-1]["text"] == "Still here."
     assert "save_note" not in llm.calls[0]["tools"]
+    system = llm.calls[0]["system"]
+    assert "memory is unreachable" in system and "first session" not in system
 
 
 async def test_permissions_decide_which_tools_exist(workspace_root, memory):
@@ -203,6 +205,23 @@ async def test_repeating_the_same_call_is_cut_short(workspace_root, memory):
     results = [await toolbox.run(same) for _ in range(3)]
 
     assert [r.ok for r in results] == [True, True, False]
+
+
+async def test_project_layout_is_in_the_prompt_so_the_model_need_not_explore(workspace_root, memory):
+    llm = ScriptedLLM(answer("ok"))
+    agent = make_agent(memory, llm, workspace_root)
+
+    await collect(agent, AgentRequest(project(workspace_root), "where is the cart?", "ollama"))
+
+    system = llm.calls[0]["system"]
+    assert "two levels deep" in system and "cart.py" in system
+    assert "node_modules" not in system
+
+
+async def test_chats_without_a_project_get_no_layout(workspace_root, memory):
+    llm = ScriptedLLM(answer("ok"))
+    await collect(make_agent(memory, llm, workspace_root), AgentRequest(None, "hello", "ollama"))
+    assert "two levels deep" not in llm.calls[0]["system"]
 
 
 def test_trim_history_starts_on_a_developer_turn():
