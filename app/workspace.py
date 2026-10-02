@@ -110,13 +110,22 @@ class Workspace:
 
     def resolve(self, rel: str | None) -> Path:
         rel = (rel or ".").strip().strip("\"'") or "."
+        outside = WorkspaceError(f"'{rel}' is outside the project. Use a path relative to the project root.")
         candidate = Path(rel)
         if candidate.is_absolute() and _inside(candidate.resolve(), self.root):
             return candidate.resolve()
-        # Models often write "/src/app.py" meaning "src/app.py at the project root".
-        target = (self.root / rel.replace("\\", "/").lstrip("/")).resolve()
+        path = rel.replace("\\", "/")
+        if candidate.is_absolute() or path.startswith("/"):
+            # Models often write "/src/app.py" meaning "src/app.py at the project root". Accept that only when the
+            # first folder exists in the project, so "/etc/passwd" or "/tmp/x" is refused on every OS rather than
+            # quietly read as a project path. A bare "/" means the project root.
+            parts = [p for p in path.split("/") if p]
+            if candidate.drive or (parts and not (self.root / parts[0]).exists()):
+                raise outside
+            path = "/".join(parts) or "."
+        target = (self.root / path).resolve()
         if not _inside(target, self.root):
-            raise WorkspaceError(f"'{rel}' is outside the project. Use a path relative to the project root.")
+            raise outside
         return target
 
     def rel(self, path: Path) -> str:

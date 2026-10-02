@@ -16,11 +16,25 @@ def test_paths_cannot_escape_the_project(workspace, bad):
 
 def test_rooted_paths_are_read_as_project_relative(workspace, project_dir):
     assert workspace.resolve("/src/cart.py") == (project_dir / "src" / "cart.py").resolve()
+    assert workspace.resolve("/src/new_module.py") == (project_dir / "src" / "new_module.py").resolve()
+    assert workspace.resolve("\\src\\cart.py") == (project_dir / "src" / "cart.py").resolve()
+    assert workspace.resolve("/") == project_dir.resolve()
 
 
 def test_absolute_path_outside_the_project_is_refused(workspace, tmp_path):
-    with pytest.raises(WorkspaceError):
+    with pytest.raises(WorkspaceError, match="outside the project"):
         workspace.resolve(str(tmp_path / "elsewhere.txt"))
+
+
+@pytest.mark.parametrize("rooted", ["/etc/passwd", "/tmp/notes.txt", "\\Windows\\win.ini"])
+def test_rooted_paths_to_folders_the_project_lacks_are_refused_on_every_os(workspace, rooted):
+    with pytest.raises(WorkspaceError, match="outside the project"):
+        workspace.resolve(rooted)
+
+
+def test_absolute_path_inside_the_project_is_accepted(workspace, project_dir):
+    inside = project_dir / "src" / "cart.py"
+    assert workspace.resolve(str(inside)) == inside.resolve()
 
 
 @pytest.mark.parametrize(
