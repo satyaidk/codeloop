@@ -69,13 +69,19 @@ class MemoryStore(Protocol):
     async def close(self) -> None: ...
 
 
-# Hindsight appends annotations to a fact, e.g. "... | When: 2026-09-28 | Involving: developer".
-# They help the model (prompts keep them) but read as clutter to a person.
-_ANNOTATIONS = re.compile(r"\s+\|\s+(?:When|Involving|Where|Who|Why|How|Context):.*$", re.IGNORECASE | re.DOTALL)
+# Hindsight appends annotations to a fact after " | ": labelled ones ("| When: 2026-09-28") and, in newer
+# versions, the reason the fact matters ("| To prevent leakage between users"). They help the model (prompts
+# keep them) but read as clutter to a person.
+_SEPARATOR = re.compile(r"\s+\|\s+")
 
 
 def display_text(text: str) -> str:
-    return _ANNOTATIONS.sub("", text).strip()
+    """A fact as a person should read it: everything from the first annotation separator on is removed. A " | "
+    inside backticks is part of the fact (a shell pipe in a command), so it is kept."""
+    for match in _SEPARATOR.finditer(text):
+        if text.count("`", 0, match.start()) % 2 == 0:
+            return text[: match.start()].strip()
+    return text.strip()
 
 
 def make_hindsight_client(settings: Settings) -> Hindsight:
@@ -135,11 +141,29 @@ class HindsightMemoryStore:
 
     async def forget(self, scope: str) -> None:
         bank_id = self.bank_id(scope)
+        await self._cancel_pending(bank_id)
         try:
             await self.client.adelete_bank(bank_id)
         except NotFoundException:
             pass  # nothing stored yet, so nothing to forget
         self._configured_banks.discard(bank_id)
+
+    async def _cancel_pending(self, bank_id: str) -> None:
+        """Stop note-taking still queued for this bank. Deleting a bank alone leaves a running job going, and on a
+        local model one project scan can keep the model busy for many minutes."""
+        for status in ("pending", "processing"):
+            try:
+                listed = await self.client.operations.list_operations(bank_id, status=status, limit=100)
+            except NotFoundException:
+                return
+            except Exception:
+                logger.warning("couldn't list %s memory jobs for %s", status, bank_id, exc_info=True)
+                continue
+            for op in listed.operations:
+                try:
+                    await self.client.operations.cancel_operation(bank_id, op.id)
+                except Exception:
+                    logger.warning("couldn't cancel memory job %s", op.id, exc_info=True)
 
     async def reflect(self, scope: str, question: str, schema: dict[str, Any] | None = None) -> Reflection:
         bank_id = await self._ensure_bank(scope)

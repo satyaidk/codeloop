@@ -153,11 +153,27 @@
 
 .send {
   min-height: 34px;
+  margin-left: auto; /* stays at the right when the row wraps on a narrow screen */
   border-radius: 999px;
 }
 
 @media (max-width: 700px) {
   .keys {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Five modes must fit across a phone: drop the icons, keep the words. */
+  .mode svg {
+    display: none;
+  }
+
+  .mode {
+    padding: 0.3rem 0.55rem;
+  }
+
+  .modes {
+    justify-content: space-between;
   }
 }
