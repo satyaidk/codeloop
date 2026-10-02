@@ -296,13 +296,15 @@ class AgentService:
 
 
 def present(memories: list[Memory]) -> list[dict[str, Any]]:
-    """Notes as the web app shows them: readable text, each fact once, original order."""
+    """Notes as the web app shows them: readable text, each fact once, original order. Hindsight often stores a
+    fact and the matching observation with only punctuation between them, so those count as one."""
     seen: set[str] = set()
     out = []
     for memory in memories:
         text = display_text(memory.text)
-        if text and text.lower() not in seen:
-            seen.add(text.lower())
+        key = text.lower().rstrip(" .!;:")
+        if text and key not in seen:
+            seen.add(key)
             out.append({"text": text, "type": memory.type, "occurred_at": memory.occurred_at})
     return out
 

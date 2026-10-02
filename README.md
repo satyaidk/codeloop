@@ -18,6 +18,8 @@
   <img src="https://img.shields.io/badge/models-Ollama%20%7C%20Anthropic%20%7C%20OpenAI%20%7C%20+6-0B6E69" alt="Model providers" />
 </p>
 
+![CodeLoop answering from project memory: seven recalled notes, no files read](docs/images/recall.png)
+
 ## Why memory matters for a coding agent
 
 A coding agent without memory starts every chat blind. To answer "how do I run the tests?" it lists folders,
@@ -34,6 +36,18 @@ Monday:   "Why does checkout return 500?"   →  reads 6 files, finds a missing 
 Friday:   "Add a discount code to checkout" →  recalls where checkout lives and how its tests run,
                                                reads only the 2 files it changes
 ```
+
+Measured on a real repository with a local 4B model (`qwen3:4b-instruct` on an 8 GB laptop), asking about
+the same code twice in different words:
+
+| | First question | Second question, a few minutes later |
+|---|---|---|
+| Notes recalled from memory | 0 | 7 |
+| Files read | 1 | 0 |
+| Input tokens | 6,791 | 4,000 |
+
+One pair of questions is an anecdote, not a benchmark; `python -m scripts.eval_memory <project>` measures it
+across a set of questions with memory on and off.
 
 ## Features
 
@@ -71,6 +85,14 @@ tools still work: CodeLoop notices and answers from memory and what you paste.
 
 **You decide what it may touch.** Reading is always allowed inside a project. Editing files and running
 commands are switches in the message box, off by default, set per chat.
+
+## Screenshots
+
+| A project and what memory knows about it | Every provider in one picker; testing methods |
+|---|---|
+| ![The project's welcome screen with its memory panel](docs/images/project.png) | ![The model picker and the Test mode's testing methods](docs/images/models-and-testing.png) |
+
+<p align="center"><img src="docs/images/mobile-memory.png" width="300" alt="Project memory on a phone" /></p>
 
 ## How it works
 
@@ -172,6 +194,9 @@ and the web app's tests run in seconds with no network, no keys and no model.
 - **One local model does two jobs.** With Ollama for both the agent and Hindsight's note-taking, the agent
   waits while Hindsight files a chat or a scan; on an 8 GB laptop a scan can take 20 minutes or more. Give
   Hindsight a smaller or hosted model (see `.env.example`) to keep the agent responsive.
+- **Ollama's context size.** Ollama picks a model's context size itself (16k tokens for `qwen3:4b-instruct`
+  on a 4 GB GPU). If yours picks 4k or less, set `OLLAMA_CONTEXT_LENGTH=16384` for Ollama: with less, long
+  prompts lose their beginning, including the agent's instructions.
 - **Memory can lag the code.** Notes are dated and the agent re-reads files before changing them; scan the
   project again after big changes.
 

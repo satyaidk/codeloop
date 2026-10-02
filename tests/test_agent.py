@@ -232,3 +232,18 @@ def test_trim_history_starts_on_a_developer_turn():
     ]
     assert trim_history(history, 2) == [{"role": "user", "content": "3"}]
     assert trim_history(history, 0) == []
+
+
+def test_present_shows_each_fact_once_ignoring_annotations_and_final_punctuation():
+    from app.agent import present
+    from app.memory import Memory
+
+    shown = present(
+        [
+            Memory(text="The store keeps one bank per user. | To prevent leaks", type="observation"),
+            Memory(text="The store keeps one bank per user", type="world"),
+            Memory(text="Tests run with pytest -q", type="world"),
+        ]
+    )
+
+    assert [n["text"] for n in shown] == ["The store keeps one bank per user.", "Tests run with pytest -q"]

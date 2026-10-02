@@ -191,7 +191,9 @@ function summarize(message: Message): string {
   const notes = steps.find((s) => s.kind === "memory");
   const tools = steps.filter((s) => s.kind === "tool").length;
   const parts: string[] = [];
-  if (notes?.kind === "memory" && notes.notes.length) parts.push(`${notes.notes.length} notes recalled`);
+  if (notes?.kind === "memory" && notes.notes.length) {
+    parts.push(`${notes.notes.length} ${notes.notes.length === 1 ? "note" : "notes"} recalled`);
+  }
   parts.push(tools ? `${tools} ${tools === 1 ? "tool call" : "tool calls"}` : "answered from context");
   if (message.filesRead?.length) parts.push(`read ${message.filesRead.length} ${message.filesRead.length === 1 ? "file" : "files"}`);
   if (message.filesChanged?.length) parts.push(`changed ${message.filesChanged.length}`);
