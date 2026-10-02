@@ -1,6 +1,6 @@
 """HTTP layer: routes, dependency wiring, request guards and the app lifecycle.
 
-Run locally with:  uvicorn app.main:app --reload
+Run locally, from the backend folder:  uvicorn app.main:app --reload
 """
 
 from __future__ import annotations

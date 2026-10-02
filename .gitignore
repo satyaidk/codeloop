@@ -8,4 +8,4 @@ __pycache__/
 workspace/*
 !workspace/.gitkeep
 # Built by `npm run build` in frontend/ (see vite.config.ts); never edit or commit it.
-app/static/
+backend/app/static/

@@ -11,7 +11,6 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 120
 target-version = "py311"
-extend-exclude = ["workspace"]
 
 [tool.ruff.lint]
 # E/F: errors, I: import order, UP: modern syntax, B: likely bugs

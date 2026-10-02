@@ -149,9 +149,11 @@ ollama pull qwen3:4b-instruct
 cp .env.example .env                  # set CODELOOP_WORKSPACE_ROOT to the folder holding your repos
 docker compose up -d hindsight        # long-term memory, on 127.0.0.1:8888
 
-python -m venv .venv && .venv/Scripts/activate      # macOS/Linux: source .venv/bin/activate
+cd frontend && npm install && npm run build && cd ..     # builds the web app into backend/app/static
+
+cd backend
+python -m venv .venv && .venv/Scripts/activate           # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cd frontend && npm install && npm run build && cd ..
 uvicorn app.main:app
 ```
 
@@ -163,25 +165,48 @@ own toolchain. To run everything in Docker instead, set `CODELOOP_HOST_WORKSPACE
 
 ### Development
 
+Run the backend and the frontend in two terminals:
+
 ```bash
-uvicorn app.main:app --reload         # API on :8000
-cd frontend && npm run dev            # web app with live reload on :5173
-pytest -q && ruff check .             # server tests and lint
-cd frontend && npm test && npm run lint && npm run typecheck
-python -m scripts.eval_memory <project-id>   # measure memory's effect on tool calls and tokens
+# backend/
+uvicorn app.main:app --reload                 # API on :8000
+pytest -q && ruff check .                     # tests and lint
+python -m scripts.eval_memory <project-id>    # measure memory's effect on tool calls and tokens
+
+# frontend/
+npm run dev                                   # web app with live reload on :5173, calling the API on :8000
+npm test && npm run lint && npm run typecheck
+```
+
+## Project structure
+
+```
+backend/                Python server (FastAPI): the agent, its tools, memory and model providers
+  app/                  the server's code; app/static is where the frontend build lands
+  tests/                server tests, run with pytest from backend/
+  scripts/              eval_memory.py: measures what memory saves
+frontend/               React web app (Vite + TypeScript); tests sit next to the code in src/
+docs/images/            screenshots for this README
+workspace/              your projects: each folder in here is a repository the agent can open
+docker-compose.yml      Hindsight (and optionally the app) in Docker
+Dockerfile              one image: builds the frontend, then serves it with the backend
+.env.example            every setting, with comments; copy it to .env
 ```
 
 ## Architecture
 
-| Layer | Files | Role |
+| Layer | Files (in `backend/app/`) | Role |
 |---|---|---|
-| HTTP | `app/main.py`, `app/schemas.py` | Routes, validation, NDJSON streaming, host and origin checks |
-| Agent | `app/agent.py`, `app/prompts.py` | The recall → act → answer → retain loop, modes, testing methods |
-| Tools | `app/tools.py` | Tool definitions, per-chat permissions, what each step shows you |
-| Workspace | `app/workspace.py`, `app/snapshot.py` | Path sandbox, secret blocking, commands, git, the one-scan snapshot |
-| Memory | `app/memory.py` | Hindsight behind a small interface; one bank per project |
-| Models | `app/llm/` | One interface; an OpenAI-compatible adapter and a native Anthropic adapter |
-| Web app | `frontend/src/` | React 19 + TypeScript: chats, the step timeline, memory panel, model picker |
+| HTTP | `main.py`, `schemas.py` | Routes, validation, NDJSON streaming, host and origin checks |
+| Agent | `agent.py`, `prompts.py` | The recall → act → answer → retain loop, modes, testing methods |
+| Tools | `tools.py` | Tool definitions, per-chat permissions, what each step shows you |
+| Workspace | `workspace.py`, `snapshot.py` | Path sandbox, secret blocking, commands, git, the one-scan snapshot |
+| Memory | `memory.py` | Hindsight behind a small interface; one bank per project |
+| Models | `llm/` | One interface; an OpenAI-compatible adapter and a native Anthropic adapter |
+| Settings | `config.py` | Every setting, read from `.env` at the repository root |
+
+The web app lives in `frontend/src/`: `components/` for the UI, `lib/` for state, the API client and the
+stream reader, and `hooks/` for small shared behaviours.
 
 The agent only talks to interfaces (`MemoryStore`, `LLM`), so tests swap in fakes: the server's tests
 and the web app's tests run in seconds with no network, no keys and no model.
