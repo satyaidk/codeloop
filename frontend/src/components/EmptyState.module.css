@@ -1,0 +1,134 @@
+.empty {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(2rem, 9vh, 5.5rem) 0 2rem;
+  animation: settle 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* The project's name is the page's one loud element: it's what every answer is about. */
+.name {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5.2vw, 3.6rem);
+  font-weight: 760;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.git {
+  margin: 0.7rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+}
+
+.memory {
+  margin-top: 1.6rem;
+  padding: 0.9rem 1.1rem 1rem;
+  border-left: 3px solid var(--amber-mark);
+  border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  background: var(--amber-soft);
+}
+
+.memory p {
+  margin: 0 0 0.7rem;
+  max-width: 62ch;
+}
+
+.memory p:last-child {
+  margin-bottom: 0;
+}
+
+.memory strong {
+  color: var(--amber);
+}
+
+.learned {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.88rem;
+}
+
+.lede {
+  max-width: 60ch;
+  margin: 1rem 0 0;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+}
+
+.link {
+  margin-left: 0.3rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--teal);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.starters {
+  display: grid;
+  gap: 0.2rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.starters button {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 0.75rem 0.4rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+}
+
+.starters button:hover .prompt {
+  color: var(--ink);
+}
+
+.starters button:hover .mode {
+  color: var(--teal);
+}
+
+.mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+}
+
+.prompt {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 560px) {
+  .starters button {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

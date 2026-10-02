@@ -1,0 +1,94 @@
+.question {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.modeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--ink-faint);
+}
+
+.bubble {
+  max-width: min(88%, 640px);
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-l) var(--radius-l) var(--radius-s) var(--radius-l);
+  background: var(--sunken);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.reply {
+  min-width: 0;
+}
+
+.plain {
+  white-space: pre-wrap;
+}
+
+.problem,
+.stopped {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-top: 0.4rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-m);
+}
+
+.problem {
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.stopped {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink-soft);
+}
+
+.problem p,
+.stopped p {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+}
+
+.model {
+  font-family: var(--font-mono);
+}
+
+.actions {
+  display: flex;
+  gap: 0.1rem;
+  opacity: 0.75;
+}
+
+.reply:hover .actions,
+.actions:focus-within {
+  opacity: 1;
+}

@@ -1,0 +1,223 @@
+.trace {
+  margin-bottom: 0.75rem;
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.45rem 0.15rem 0.2rem;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 0.84rem;
+}
+
+.summary:hover {
+  background: var(--sunken);
+  color: var(--ink-soft);
+}
+
+.chevron {
+  transition: transform 140ms;
+}
+
+.summary[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+/* The rail: one line down the left, one marker per step. */
+.rail {
+  position: relative;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 11px;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: start;
+  padding: 0.2rem 0;
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+.step[data-kind="memory"] .marker {
+  border-color: var(--amber-line);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.step[data-status="running"] .marker,
+.step[data-kind="working"] .marker {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.step[data-status="failed"] .marker {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.step[data-kind="thought"] .marker {
+  width: 9px;
+  height: 9px;
+  margin: 7px 0 0 7px;
+  border-color: var(--line-strong);
+}
+
+.body {
+  min-width: 0;
+}
+
+.text,
+.line {
+  display: block;
+  padding-top: 0.12rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+  width: 100%;
+  padding: 0.12rem 0 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.line:disabled {
+  cursor: default;
+}
+
+.line:not(:disabled):hover {
+  color: var(--ink);
+}
+
+.step[data-kind="memory"] .line,
+.step[data-kind="memory"] .text {
+  color: var(--amber);
+}
+
+.step[data-status="failed"] .text,
+.step[data-status="failed"] .line {
+  color: var(--danger);
+}
+
+.step[data-kind="notice"] .text {
+  color: var(--ink);
+}
+
+.more {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+.thought {
+  margin: 0;
+  padding-top: 0.05rem;
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.notes {
+  margin: 0.4rem 0 0.2rem;
+  padding: 0.55rem 0.8rem 0.55rem 1.6rem;
+  border-radius: var(--radius-s);
+  background: var(--amber-soft);
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+
+.notes li + li {
+  margin-top: 0.3rem;
+}
+
+.noteDetail {
+  margin: 0.35rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-s);
+  background: var(--amber-soft);
+  font-size: 0.86rem;
+}
+
+.diff,
+.output {
+  max-height: 360px;
+  margin: 0.4rem 0 0.3rem;
+  padding: 0.6rem 0;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--code-bg);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.output {
+  padding: 0.6rem 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.diff span {
+  display: block;
+  padding: 0 0.8rem;
+  white-space: pre;
+}
+
+.add {
+  background: var(--add-bg);
+  color: var(--add);
+}
+
+.del {
+  background: var(--del-bg);
+  color: var(--del);
+}
+
+.hunk {
+  color: var(--teal);
+}
+
+.meta {
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+
+.ctx {
+  color: var(--ink-soft);
+}

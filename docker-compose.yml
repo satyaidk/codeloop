@@ -1,0 +1,58 @@
+# The whole system: the Hindsight memory server and the CodeLoop app.
+#
+#   1. cp .env.example .env    and choose your providers in it
+#   2. docker compose up --build
+#   3. open http://localhost:8000 (CodeLoop) and http://localhost:9999 (Hindsight's memory explorer)
+#
+# Just the memory server, for running CodeLoop itself on your machine (so it can run your project's tests
+# with your own toolchain):   docker compose up -d hindsight
+#
+# Every port is published on 127.0.0.1 only. The API has no accounts, so it must not be reachable from
+# other machines on your network.
+
+services:
+  hindsight:
+    # Pinned to the server version that matches hindsight-client in requirements.txt; upgrade both together.
+    image: ghcr.io/vectorize-io/hindsight:${HINDSIGHT_VERSION:-0.10.2}
+    ports:
+      - "127.0.0.1:8888:8888" # Hindsight API
+      - "127.0.0.1:9999:9999" # Hindsight UI: browse banks, facts and observations
+    # Hindsight uses an LLM of its own to turn conversations into facts. Which one is set by the
+    # HINDSIGHT_API_LLM_* lines in .env (Ollama by default).
+    env_file: .env
+    environment:
+      # A fixed worker name, so jobs left unfinished when the container stops are picked up again after a
+      # restart (by default the name is the container id, which changes when the container is recreated).
+      HINDSIGHT_API_WORKER_ID: codeloop-hindsight
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # lets the container reach Ollama on your computer
+    volumes:
+      - hindsight-data:/home/hindsight/.pg0 # embedded Postgres: memories survive restarts
+    healthcheck:
+      # The image has no curl, so use its Python to call the health endpoint.
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8888/health', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s # the first boot downloads embedding models
+
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file: .env
+    environment:
+      CODELOOP_HINDSIGHT_URL: http://hindsight:8888 # the service name inside the compose network
+      CODELOOP_OLLAMA_BASE_URL: http://host.docker.internal:11434/v1
+      CODELOOP_WORKSPACE_ROOT: /workspace
+    volumes:
+      # Your projects. Point CODELOOP_HOST_WORKSPACE at the folder that holds your repositories.
+      - ${CODELOOP_HOST_WORKSPACE:-./workspace}:/workspace
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      hindsight:
+        condition: service_healthy
+
+volumes:
+  hindsight-data:

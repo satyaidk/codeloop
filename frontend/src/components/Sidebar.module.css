@@ -1,0 +1,224 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.9rem 0.7rem 0.6rem;
+  overflow: hidden;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.1rem 0.35rem 0.8rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 750;
+  letter-spacing: -0.015em;
+}
+
+.newChat {
+  justify-content: center;
+  margin: 0 0.15rem 0.6rem;
+}
+
+.section {
+  padding: 0.35rem 0 0.5rem;
+}
+
+.chats {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 32px;
+  padding: 0 0.15rem 0 0.4rem;
+}
+
+.sectionHead h2 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.group {
+  margin: 0.6rem 0 0.15rem;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 560;
+  color: var(--ink-faint);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 34px;
+  padding: 0.3rem 0.45rem;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+.project:hover {
+  background: var(--sunken);
+  color: var(--ink);
+}
+
+.project[aria-current="true"] {
+  background: var(--teal-soft);
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.project[aria-current="true"] svg {
+  color: var(--teal);
+}
+
+.projectName {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  max-width: 7.5rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.branch {
+  font-family: var(--font-mono);
+}
+
+.chatRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.chat {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0.3rem 0.45rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink-soft);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat:hover {
+  background: var(--sunken);
+  color: var(--ink);
+}
+
+.chat[aria-current="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.rowActions {
+  position: absolute;
+  right: 2px;
+  display: none;
+  border-radius: var(--radius-s);
+  background: var(--sunken);
+}
+
+.chatRow:hover .rowActions,
+.chatRow:focus-within .rowActions {
+  display: flex;
+}
+
+.rowActions :global(.icon-btn) {
+  width: 28px;
+  height: 28px;
+}
+
+.rename {
+  min-height: 32px;
+}
+
+.hint {
+  margin: 0.25rem 0.4rem;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+
+.hint button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--teal);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.2rem 0 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.health {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+}
+
+.health[data-health="ok"] .dot {
+  background: var(--amber-mark);
+}
+
+.health[data-health="no-memory"] .dot,
+.health[data-health="offline"] .dot {
+  background: var(--danger);
+}

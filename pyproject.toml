@@ -1,0 +1,22 @@
+[project]
+name = "codeloop"
+version = "0.1.0"
+description = "A coding agent with long-term project memory, built on Hindsight. Works with local and hosted models."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["workspace"]
+
+[tool.ruff.lint]
+# E/F: errors, I: import order, UP: modern syntax, B: likely bugs
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's Path()/Query() defaults are the framework's intended style.
+extend-immutable-calls = ["fastapi.Path", "fastapi.Query"]

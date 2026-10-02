@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+# The projects the agent works on live here; they're your repositories, not part of CodeLoop.
+workspace/*
+!workspace/.gitkeep
+# Built by `npm run build` in frontend/ (see vite.config.ts); never edit or commit it.
+app/static/

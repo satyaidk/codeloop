@@ -1,0 +1,7 @@
+anthropic>=1.11,<2
+openai>=3,<4
+hindsight-client==0.10.2
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic>=2.7,<3
+pydantic-settings>=2.4,<3
