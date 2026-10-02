@@ -144,6 +144,8 @@ class AgentService:
         )
         tools = toolbox.specs()
         allowlist = sorted(workspace.allowlist) if workspace else []
+        # A small map of the project saves the model a round of exploring (and each round re-sends everything).
+        layout = (await asyncio.to_thread(workspace.list_tree, ".", 2, 80))[0] if workspace else None
 
         def system_prompt() -> str:
             return build_system_prompt(
@@ -153,6 +155,8 @@ class AgentService:
                 notes if req.use_memory else None,
                 req.test_methods,
                 allowlist,
+                layout,
+                memory_down=req.use_memory and not memory_ok,
             )
 
         system = system_prompt()

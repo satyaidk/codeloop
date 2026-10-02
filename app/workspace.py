@@ -246,7 +246,8 @@ class Workspace:
                     if len(results) < max_results:
                         results.append(f"{rel_path}:{number}: {line.strip()[:200]}")
         if not results:
-            return f"No matches for /{pattern}/.", 0
+            hint = "Try a shorter, broader pattern (one identifier, no regex), or check the layout first."
+            return f"No matches for /{pattern}/. {hint}", 0
         more = (
             f"\n... {total - len(results)} more matches; narrow the search with path or glob."
             if total > len(results)

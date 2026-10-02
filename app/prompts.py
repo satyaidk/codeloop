@@ -131,6 +131,14 @@ NO_MEMORY = (
     "You have no notes about this {scope} yet: this is the first session, so explore as needed and save what you learn."
 )
 MEMORY_OFF = "Long-term memory is off for this chat: nothing you learn will be saved."
+MEMORY_DOWN = "Long-term memory is unreachable right now: you have no notes, and nothing will be saved this time."
+
+PROJECT_MAP = """\
+The project's layout, two levels deep (dependency and build folders hidden). Use it to decide where to look
+instead of listing folders; list_files shows deeper levels.
+```
+{layout}
+```"""
 
 STEP_LIMIT = (
     "You have reached the tool-step limit for this question. Answer now with what you've found; don't call more tools."
@@ -149,6 +157,8 @@ def build_system_prompt(
     memories: list[Memory] | None,
     test_methods: list[str] | None = None,
     allowlist: list[str] | None = None,
+    layout: str | None = None,
+    memory_down: bool = False,
 ) -> str:
     where = (
         f"You are working in the project '{project_name}'. Paths are relative to its root."
@@ -177,9 +187,13 @@ def build_system_prompt(
             permissions.append("You can't run commands in this chat: tell the developer which command to run.")
     if permissions:
         parts.append("\n".join(permissions))
+    if layout:
+        parts.append(PROJECT_MAP.format(layout=layout))
 
     scope = "project" if project_name else "developer"
-    if memories is None:
+    if memory_down:
+        parts.append(MEMORY_DOWN)
+    elif memories is None:
         parts.append(MEMORY_OFF)
     elif memories:
         parts.append(MEMORY_SECTION.format(scope=scope, memories=memory_lines(memories)))

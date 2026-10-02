@@ -53,8 +53,9 @@ def test_test_mode_lists_the_chosen_methods():
 
 
 def test_memory_section_comes_last_so_the_stable_part_can_be_cached():
-    prompt = build_system_prompt("ask", "shop-api", {"read_file"}, [Memory(text="Uses FastAPI")])
+    prompt = build_system_prompt("ask", "shop-api", {"read_file"}, [Memory(text="Uses FastAPI")], layout="src/")
     assert prompt.rstrip().endswith("</memories>")
+    assert prompt.index("two levels deep") < prompt.index("<memories>")
 
 
 def test_format_turn_records_what_was_touched():
