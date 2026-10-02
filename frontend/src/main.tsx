@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 
 // Fonts ship with the app (no font CDN request), so it works offline next to a local model.
 import "@fontsource-variable/red-hat-text";
-import "@fontsource-variable/red-hat-display";
 import "@fontsource-variable/red-hat-mono";
+import "@fontsource-variable/martian-mono/wdth.css"; // display: the variable width axis is part of the design
 import "./styles/global.css";
 
 import App from "./App";

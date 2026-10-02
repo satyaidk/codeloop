@@ -120,7 +120,7 @@ class Toolbox:
 
     async def _list_files(self, path: str = ".", depth: int = 2) -> ToolResult:
         text, count = await asyncio.to_thread(self.workspace.list_tree, path, int(depth or 2))
-        return ToolResult(True, text, f"Listed {path} · {count} entries")
+        return ToolResult(True, text, f"Listed {path} ({count} entries)")
 
     async def _read_file(self, path: str, start_line: int | None = None, end_line: int | None = None) -> ToolResult:
         text, rel, summary = await asyncio.to_thread(self.workspace.read, path, _int(start_line), _int(end_line))
@@ -152,7 +152,7 @@ class Toolbox:
         else:
             status = f"exited {result.exit_code}"
         content = f"$ {result.command}\nexit code: {result.exit_code}\n\n{result.output or '(no output)'}"
-        summary = f"{result.command} · {status} in {result.seconds:.1f}s"
+        summary = f"Ran {result.command}: {status} after {result.seconds:.1f}s"
         return ToolResult(
             True, content, summary, result.output or "(no output)", "output",
             command=result.command, exit_code=result.exit_code,
@@ -160,7 +160,7 @@ class Toolbox:
 
 
 def _change_result(verb: str, change) -> ToolResult:
-    summary = f"{verb} {change.path} · +{change.added} −{change.removed}"
+    summary = f"{verb} {change.path} (+{change.added} −{change.removed})"
     content = f"{verb} {change.path} (+{change.added} -{change.removed} lines)."
     return ToolResult(True, content, summary, change.diff or "(no changes)", "diff", file_changed=change.path)
 

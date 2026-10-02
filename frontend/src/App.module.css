@@ -19,12 +19,13 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  background: var(--surface);
+  background: var(--canvas);
 }
 
+/* The memory pane's amber edge marks everything in it as coming from memory. */
 .memory {
   min-height: 0;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--amber-line);
   background: var(--panel);
 }
 
@@ -42,12 +43,12 @@
   inset: 0;
   z-index: 20;
   border: 0;
-  background: rgb(10 16 24 / 0.38);
+  background: rgb(4 8 20 / 0.55);
 }
 
 .banner {
   margin: 0;
-  padding: 0.55rem 1rem;
+  padding: 0.55rem 1.25rem;
   border-bottom: 1px solid var(--line);
   background: var(--danger-soft);
   color: var(--danger);

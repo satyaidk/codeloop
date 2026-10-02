@@ -115,7 +115,7 @@
 
 .range input {
   flex: 1;
-  accent-color: var(--teal);
+  accent-color: var(--action);
 }
 
 .range output {

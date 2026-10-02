@@ -220,7 +220,7 @@ class Workspace:
             if last < total
             else ""
         )
-        return f"{header}\n{body}{footer}", rel_path, f"Read {rel_path} · lines {first}–{last} of {total}"
+        return f"{header}\n{body}{footer}", rel_path, f"Read {rel_path}, lines {first}–{last} of {total}"
 
     def search(self, pattern: str, rel: str = ".", glob: str | None = None, max_results: int = 60) -> tuple[str, int]:
         if not pattern:

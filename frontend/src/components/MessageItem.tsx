@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from "react";
-import { Check, Copy, RotateCcw } from "lucide-react";
+import { Check, Coins, Copy, Cpu, RotateCcw, Timer } from "lucide-react";
 import { Trace } from "./Trace";
 import { useNow } from "../hooks/useNow";
 import { useAppState } from "../lib/AppState";
@@ -73,14 +73,25 @@ function Reply({ message }: { message: Message }) {
       {message.status === "done" && (
         <footer className={styles.footer}>
           <span className={styles.stats}>
-            {message.model && <span className={styles.model}>{message.model}</span>}
-            {message.usage && (
-              <span title="Tokens sent to and received from the model, across every step">
-                {tokens(message.usage.input)} in
-                {message.usage.cached > 0 && <> ({tokens(message.usage.cached)} cached)</>} · {tokens(message.usage.output)} out
+            {message.model && (
+              <span className={styles.stat}>
+                <Cpu size={13} aria-hidden="true" />
+                <span className="ident">{message.model}</span>
               </span>
             )}
-            {message.elapsedMs !== undefined && <span>{duration(message.elapsedMs)}</span>}
+            {message.usage && (
+              <span className={styles.stat} title="Tokens sent to and received from the model, across every step">
+                <Coins size={13} aria-hidden="true" />
+                {tokens(message.usage.input)} in
+                {message.usage.cached > 0 && <> ({tokens(message.usage.cached)} cached)</>}, {tokens(message.usage.output)} out
+              </span>
+            )}
+            {message.elapsedMs !== undefined && (
+              <span className={styles.stat}>
+                <Timer size={13} aria-hidden="true" />
+                {duration(message.elapsedMs)}
+              </span>
+            )}
           </span>
           <span className={styles.actions}>
             <button type="button" className="icon-btn" onClick={copy} aria-label="Copy answer">

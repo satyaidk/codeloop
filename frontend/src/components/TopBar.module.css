@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-height: 60px;
-  padding: 0.55rem 1rem 0.55rem 1.25rem;
+  min-height: 62px;
+  padding: 0.55rem 1rem 0.55rem 1.5rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -20,22 +20,26 @@
   margin: 0;
   overflow: hidden;
   font-size: 1rem;
-  font-weight: 650;
+  font-weight: 680;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.title p {
-  margin: 0;
+.where {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.05rem 0 0;
   overflow: hidden;
   font-size: 0.8rem;
   color: var(--ink-faint);
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .branch {
-  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .actions {
@@ -44,9 +48,15 @@
   gap: 0.5rem;
 }
 
+.memory {
+  border-color: var(--line-strong);
+  background: transparent;
+  color: var(--ink-soft);
+}
+
 .memory[aria-pressed="true"] {
-  background: var(--amber-soft);
   border-color: var(--amber-line);
+  background: var(--amber-soft);
   color: var(--amber);
 }
 

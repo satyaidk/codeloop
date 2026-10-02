@@ -1,4 +1,4 @@
-import { Menu, NotebookPen } from "lucide-react";
+import { GitBranch, Menu, NotebookPen } from "lucide-react";
 import { ModelPicker } from "./ModelPicker";
 import { useAppState } from "../lib/AppState";
 import { useServer } from "../lib/server";
@@ -24,9 +24,14 @@ export function TopBar({ onOpenNav, memoryOpen, onToggleMemory }: TopBarProps) {
       <div className={styles.title}>
         <h1>{activeConversation ? activeConversation.title : place}</h1>
         {activeConversation && (
-          <p>
-            {place}
-            {project?.branch && <span className={styles.branch}> · {project.branch}</span>}
+          <p className={styles.where}>
+            <span>{place}</span>
+            {project?.branch && (
+              <span className={styles.branch}>
+                <GitBranch size={12} aria-hidden="true" />
+                <span className="ident">{project.branch}</span>
+              </span>
+            )}
           </p>
         )}
       </div>

@@ -37,7 +37,7 @@
 }
 
 .dot[data-ready="true"] {
-  background: var(--teal);
+  background: var(--action);
 }
 
 .popover {
@@ -51,7 +51,7 @@
   padding: 0.5rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
-  background: var(--surface);
+  background: var(--raised);
   box-shadow: var(--shadow-pop);
 }
 
@@ -91,11 +91,11 @@
 }
 
 .provider:hover {
-  background: var(--sunken);
+  background: var(--action-soft);
 }
 
 .provider[aria-pressed="true"] {
-  background: var(--teal-soft);
+  background: var(--action-soft);
   color: var(--ink);
 }
 
@@ -109,7 +109,7 @@
 }
 
 .state[data-ready="true"] {
-  color: var(--teal);
+  color: var(--action);
 }
 
 .hint {
@@ -148,7 +148,7 @@
   padding: 0.2rem 0.5rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--surface);
+  background: transparent;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--ink-soft);
@@ -159,8 +159,8 @@
 }
 
 .chip[aria-pressed="true"] {
-  border-color: var(--teal);
-  background: var(--teal-soft);
+  border-color: var(--action);
+  background: var(--action-soft);
   color: var(--ink);
 }
 

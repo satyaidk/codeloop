@@ -87,7 +87,8 @@ beforeEach(() => {
       if (url.startsWith("/api/projects/shop-api/status")) return json({ project: PROJECT, notes, commits_since: null });
       if (url === "/api/projects/shop-api/learn")
         return json({ files_scanned: 12, characters: 4000, head: "a1b2c3d", branch: "main", learned_at: "2026-10-01T10:00:00Z" });
-      if (url.startsWith("/api/memory/")) return json({ memories: [{ text: "Tests run with pytest -q" }], total: 1 });
+      if (url.startsWith("/api/memory/"))
+        return json({ memories: notes ? [{ text: "Tests run with pytest -q" }] : [], total: notes });
       if (url === "/api/agent") return ndjson(agentEvents);
       return new Response("not found", { status: 404 });
     }),
@@ -119,7 +120,7 @@ const ANSWER: AgentEvent[] = [
     id: "c1",
     name: "edit_file",
     ok: true,
-    summary: "Edited src/cart.py · +1 −1",
+    summary: "Edited src/cart.py (+1 −1)",
     detail: "--- a/src/cart.py\n+++ b/src/cart.py\n@@ -1 +1 @@\n-    return []\n+    return list()",
     kind: "diff",
   },
@@ -141,6 +142,7 @@ describe("CodeLoop", () => {
     await openProject(user);
 
     expect(await screen.findByText(/3 facts/)).toBeInTheDocument();
+    expect(await screen.findByText("Tests run with pytest -q")).toBeInTheDocument(); // a real fact from memory
     expect(screen.getByText("a1b2c3d")).toBeInTheDocument();
   });
 
@@ -166,9 +168,11 @@ describe("CodeLoop", () => {
 
     // The answer is rendered as Markdown once the renderer has loaded.
     expect(await screen.findByText("quantity", { selector: "strong" })).toBeInTheDocument();
-    expect(screen.getByText("2 notes recalled · 1 tool call · read 1 file · changed 1 · saved 1 note")).toBeInTheDocument();
+    expect(
+      screen.getByText("Recalled 2 notes, used 1 tool, read 1 file, changed 1 file and saved 1 note"),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Edited src\/cart.py/)).toBeInTheDocument(); // the trace stays open when files changed
-    expect(screen.getByText(/4.2k in/)).toHaveTextContent("4.2k in (1.8k cached) · 310 out");
+    expect(screen.getByText(/4.2k in/)).toHaveTextContent("4.2k in (1.8k cached), 310 out");
 
     const sent = calls.find((c) => c.url === "/api/agent")?.body as Record<string, unknown>;
     expect(sent).toMatchObject({

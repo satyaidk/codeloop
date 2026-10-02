@@ -1,25 +1,26 @@
 .trace {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .summary {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.15rem 0.45rem 0.15rem 0.2rem;
-  border: 0;
-  border-radius: var(--radius-s);
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem 0.2rem 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: transparent;
-  color: var(--ink-faint);
-  font-size: 0.84rem;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
 }
 
 .summary:hover {
-  background: var(--sunken);
-  color: var(--ink-soft);
+  border-color: var(--line-strong);
+  color: var(--ink);
 }
 
 .chevron {
+  color: var(--ink-faint);
   transition: transform 140ms;
 }
 
@@ -27,10 +28,10 @@
   transform: rotate(90deg);
 }
 
-/* The rail: one line down the left, one marker per step. */
+/* The run tape: one line down the left, one marker per step, in the order they happened. */
 .rail {
   position: relative;
-  margin: 0.35rem 0 0;
+  margin: 0.55rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -38,20 +39,20 @@
 .rail::before {
   content: "";
   position: absolute;
-  top: 12px;
-  bottom: 12px;
-  left: 11px;
+  top: 14px;
+  bottom: 14px;
+  left: 11.5px;
   width: 1px;
-  background: var(--line-strong);
+  background: linear-gradient(var(--line-strong), var(--line-strong)) no-repeat;
 }
 
 .step {
   position: relative;
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr);
-  gap: 0.6rem;
+  gap: 0.7rem;
   align-items: start;
-  padding: 0.2rem 0;
+  padding: 0.22rem 0;
 }
 
 .marker {
@@ -59,11 +60,11 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 23px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
   border: 1px solid var(--line-strong);
   border-radius: 50%;
-  background: var(--surface);
+  background: var(--canvas);
   color: var(--ink-soft);
 }
 
@@ -71,12 +72,14 @@
   border-color: var(--amber-line);
   background: var(--amber-soft);
   color: var(--amber);
+  box-shadow: var(--amber-glow);
 }
 
 .step[data-status="running"] .marker,
 .step[data-kind="working"] .marker {
-  border-color: var(--teal);
-  color: var(--teal);
+  border-color: var(--action);
+  color: var(--action);
+  animation: pulse 1.4s ease-in-out infinite;
 }
 
 .step[data-status="failed"] .marker {
@@ -88,8 +91,8 @@
 .step[data-kind="thought"] .marker {
   width: 9px;
   height: 9px;
-  margin: 7px 0 0 7px;
-  border-color: var(--line-strong);
+  margin: 8px 0 0 7.5px;
+  border-color: var(--ink-faint);
 }
 
 .body {
@@ -99,8 +102,8 @@
 .text,
 .line {
   display: block;
-  padding-top: 0.12rem;
-  font-size: 0.88rem;
+  padding-top: 0.15rem;
+  font-size: 0.87rem;
   color: var(--ink-soft);
   overflow-wrap: anywhere;
 }
@@ -109,9 +112,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.2rem 0.6rem;
+  gap: 0.2rem 0.65rem;
   width: 100%;
-  padding: 0.12rem 0 0;
   border: 0;
   background: none;
   text-align: left;
@@ -140,26 +142,31 @@
 }
 
 .more {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--teal);
+  font-size: 0.76rem;
+  font-weight: 650;
+  color: var(--action);
 }
 
 .thought {
   margin: 0;
   padding-top: 0.05rem;
-  font-size: 0.88rem;
+  font-size: 0.87rem;
   font-style: italic;
-  color: var(--ink-soft);
+  color: var(--ink-faint);
 }
 
 .notes {
-  margin: 0.4rem 0 0.2rem;
-  padding: 0.55rem 0.8rem 0.55rem 1.6rem;
-  border-radius: var(--radius-s);
+  margin: 0.45rem 0 0.25rem;
+  padding: 0.65rem 0.9rem 0.65rem 1.7rem;
+  border: 1px solid var(--amber-line);
+  border-radius: var(--radius-m);
   background: var(--amber-soft);
   font-size: 0.86rem;
   color: var(--ink);
+}
+
+.notes li::marker {
+  color: var(--amber-mark);
 }
 
 .notes li + li {
@@ -167,9 +174,10 @@
 }
 
 .noteDetail {
-  margin: 0.35rem 0;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-s);
+  margin: 0.4rem 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--amber-line);
+  border-radius: var(--radius-m);
   background: var(--amber-soft);
   font-size: 0.86rem;
 }
@@ -177,40 +185,42 @@
 .diff,
 .output {
   max-height: 360px;
-  margin: 0.4rem 0 0.3rem;
+  margin: 0.45rem 0 0.3rem;
   padding: 0.6rem 0;
   overflow: auto;
   border: 1px solid var(--line);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
   background: var(--code-bg);
   font-size: 0.8rem;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .output {
-  padding: 0.6rem 0.8rem;
+  padding: 0.65rem 0.85rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .diff span {
   display: block;
-  padding: 0 0.8rem;
+  padding: 0 0.85rem;
   white-space: pre;
 }
 
 .add {
   background: var(--add-bg);
   color: var(--add);
+  box-shadow: inset 2px 0 0 var(--add);
 }
 
 .del {
   background: var(--del-bg);
   color: var(--del);
+  box-shadow: inset 2px 0 0 var(--del);
 }
 
 .hunk {
-  color: var(--teal);
+  color: var(--action);
 }
 
 .meta {
@@ -220,4 +230,10 @@
 
 .ctx {
   color: var(--ink-soft);
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 0 5px var(--action-soft);
+  }
 }

@@ -46,7 +46,7 @@ export function Sidebar({ onNavigate, onOpenSettings, onAddProject }: SidebarPro
     <nav className={styles.sidebar} aria-label="Projects and chats">
       <div className={styles.brand}>
         <LoopMark size={26} />
-        <span>CodeLoop</span>
+        <span className={styles.wordmark}>CodeLoop</span>
       </div>
 
       <button

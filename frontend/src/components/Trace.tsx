@@ -62,7 +62,7 @@ export function Trace({ message, now }: { message: Message; now: number }) {
                 <LoaderCircle size={13} className="spin" />
               </span>
               <span className={styles.text}>
-                {steps.length ? "Thinking" : "Starting"} · {duration(Math.max(0, now - message.createdAt))}
+                {steps.length ? "Thinking" : "Starting"} ({duration(Math.max(0, now - message.createdAt))})
               </span>
             </li>
           )}
@@ -185,18 +185,18 @@ function lineClass(line: string): string {
   return "ctx";
 }
 
-/** One line for a finished run, e.g. "3 notes · 4 steps · read 2 files · changed 1". */
+/** One sentence for a finished run, e.g. "Recalled 7 notes, used 2 tools and read 1 file". */
 function summarize(message: Message): string {
   const steps = message.steps ?? [];
-  const notes = steps.find((s) => s.kind === "memory");
+  const memory = steps.find((s) => s.kind === "memory");
   const tools = steps.filter((s) => s.kind === "tool").length;
+  const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   const parts: string[] = [];
-  if (notes?.kind === "memory" && notes.notes.length) {
-    parts.push(`${notes.notes.length} ${notes.notes.length === 1 ? "note" : "notes"} recalled`);
-  }
-  parts.push(tools ? `${tools} ${tools === 1 ? "tool call" : "tool calls"}` : "answered from context");
-  if (message.filesRead?.length) parts.push(`read ${message.filesRead.length} ${message.filesRead.length === 1 ? "file" : "files"}`);
-  if (message.filesChanged?.length) parts.push(`changed ${message.filesChanged.length}`);
-  if (message.notesSaved) parts.push(`saved ${message.notesSaved} ${message.notesSaved === 1 ? "note" : "notes"}`);
-  return parts.join(" · ");
+  if (memory?.kind === "memory" && memory.notes.length) parts.push(`recalled ${count(memory.notes.length, "note", "notes")}`);
+  parts.push(tools ? `used ${count(tools, "tool", "tools")}` : "answered from context");
+  if (message.filesRead?.length) parts.push(`read ${count(message.filesRead.length, "file", "files")}`);
+  if (message.filesChanged?.length) parts.push(`changed ${count(message.filesChanged.length, "file", "files")}`);
+  if (message.notesSaved) parts.push(`saved ${count(message.notesSaved, "note", "notes")}`);
+  const sentence = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0];
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }

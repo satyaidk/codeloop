@@ -152,7 +152,7 @@ export function MemoryPanel({ onClose }: { onClose: () => void }) {
                 <p>{note.text}</p>
                 <span className={styles.noteMeta}>
                   {note.type && TYPE_LABEL[note.type] ? TYPE_LABEL[note.type] : "Note"}
-                  {note.occurred_at && ` · ${timeAgo(note.occurred_at)}`}
+                  {note.occurred_at && `, learned ${timeAgo(note.occurred_at)}`}
                 </span>
               </li>
             ))}

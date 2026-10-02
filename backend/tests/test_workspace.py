@@ -61,7 +61,7 @@ def test_read_numbers_lines_and_pages(workspace):
     assert "def total" not in text
     assert "lines 2-2 of 6" in text
     assert "start_line=3" in text  # tells the model how to continue
-    assert summary == "Read src/cart.py · lines 2–2 of 6"
+    assert summary == "Read src/cart.py, lines 2–2 of 6"
 
 
 def test_read_missing_file_explains(workspace):

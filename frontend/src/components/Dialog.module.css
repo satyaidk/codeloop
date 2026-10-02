@@ -5,7 +5,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
-  background: var(--surface);
+  background: var(--raised);
   color: var(--ink);
   box-shadow: var(--shadow-pop);
 }
@@ -15,7 +15,7 @@
 }
 
 .dialog::backdrop {
-  background: rgb(10 16 24 / 0.45);
+  background: rgb(4 8 20 / 0.6);
 }
 
 .dialog[open] {
@@ -46,7 +46,7 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-size: 1.15rem;
   font-weight: 720;
   letter-spacing: -0.01em;

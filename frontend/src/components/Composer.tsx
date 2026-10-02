@@ -67,7 +67,7 @@ export const Composer = forwardRef(function Composer(
       }}
     >
       <div className={styles.inner}>
-        <div className={styles.modes} role="radiogroup" aria-label="Mode">
+        <div className={styles.tabs} role="radiogroup" aria-label="Mode">
           {MODES.map((mode) => {
             const meta = MODE_META[mode];
             const Icon = meta.icon;
@@ -77,7 +77,7 @@ export const Composer = forwardRef(function Composer(
                 type="button"
                 role="radio"
                 aria-checked={settings.mode === mode}
-                className={styles.mode}
+                className={styles.tab}
                 title={meta.hint}
                 onClick={() => set({ mode })}
               >
@@ -88,23 +88,22 @@ export const Composer = forwardRef(function Composer(
           })}
         </div>
 
-        {settings.mode === "test" && (
-          <div className={styles.methods} role="group" aria-label="Testing methods">
-            {(Object.keys(methods) as TestMethod[]).map((method) => (
-              <button
-                key={method}
-                type="button"
-                className={styles.method}
-                aria-pressed={settings.testMethods.includes(method)}
-                onClick={() => toggleMethod(method)}
-              >
-                {methods[method]}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className={styles.box}>
+        <div className={styles.box} data-mode={settings.mode}>
+          {settings.mode === "test" && (
+            <div className={styles.methods} role="group" aria-label="Testing methods">
+              {(Object.keys(methods) as TestMethod[]).map((method) => (
+                <button
+                  key={method}
+                  type="button"
+                  className={styles.method}
+                  aria-pressed={settings.testMethods.includes(method)}
+                  onClick={() => toggleMethod(method)}
+                >
+                  {methods[method]}
+                </button>
+              ))}
+            </div>
+          )}
           <label htmlFor="composer-input" className="visually-hidden">
             Message
           </label>
@@ -160,7 +159,7 @@ export const Composer = forwardRef(function Composer(
             />
             <span className={styles.spacer} />
             <span className={styles.keys} aria-hidden="true">
-              Enter to send · Shift+Enter for a new line
+              <kbd>Enter</kbd> sends, <kbd>Shift</kbd>+<kbd>Enter</kbd> adds a line
             </span>
             {running ? (
               <button
