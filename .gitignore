@@ -9,3 +9,6 @@ workspace/*
 !workspace/.gitkeep
 # Built by `npm run build` in frontend/ (see vite.config.ts); never edit or commit it.
 backend/app/static/
+
+# /brag launch-video renders (large binaries)
+brag-output*/
