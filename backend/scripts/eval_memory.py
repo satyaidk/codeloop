@@ -7,7 +7,7 @@ answers in its notes instead of re-reading the code, so it should need fewer too
 Runs pass remember=False, so the evaluation never writes into the memory it is measuring (no automatic
 retain, and no save_note tool).
 
-Usage (from the project root, with Hindsight running and the project learned first):
+Usage (from the backend folder, with Hindsight running and the project learned first):
     python -m scripts.eval_memory <project-id> [--provider ollama] [--model qwen3:4b-instruct]
 """
 

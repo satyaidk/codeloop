@@ -8,7 +8,7 @@ WORKDIR /build/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 COPY frontend/ ./
-# vite.config.ts writes the build to ../app/static, i.e. /build/app/static
+# vite.config.ts writes the build to ../backend/app/static, i.e. /build/backend/app/static
 RUN npm run build
 
 # ---- stage 2: the server ----
@@ -24,12 +24,12 @@ RUN apt-get update \
     && git config --system --add safe.directory '*'
 
 WORKDIR /srv
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app ./app
-COPY scripts ./scripts
-COPY --from=web /build/app/static ./app/static
+COPY backend/app ./app
+COPY backend/scripts ./scripts
+COPY --from=web /build/backend/app/static ./app/static
 
 # Run as a non-root user: a container escape then lands in an unprivileged account.
 RUN useradd --create-home codeloop && mkdir -p /workspace && chown codeloop /workspace

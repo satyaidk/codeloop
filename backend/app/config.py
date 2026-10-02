@@ -8,8 +8,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from pydantic import AliasChoices, Field, SecretStr
+from pydantic import AliasChoices, Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# The repository root (backend/app/config.py, two folders up). The .env file and the workspace folder live
+# there, so the server finds them whichever folder it is started from.
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _key(name: str) -> Any:
@@ -19,10 +23,11 @@ def _key(name: str) -> Any:
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="CODELOOP_", extra="ignore")
+    model_config = SettingsConfigDict(env_file=(ROOT / ".env", ".env"), env_prefix="CODELOOP_", extra="ignore")
 
     # --- Workspace: the folder whose sub-folders are the projects the agent can open ---
-    workspace_root: Path = Path("workspace")
+    # A relative path is relative to the repository root.
+    workspace_root: Path = ROOT / "workspace"
     # Commands the agent may run when a chat allows it. The first word of a command must be one of these.
     command_allowlist: str = (
         "pytest,python,python3,py,npm,npx,pnpm,yarn,node,bun,deno,go,cargo,mvn,gradle,gradlew,dotnet,"
@@ -74,6 +79,11 @@ class Settings(BaseSettings):
     custom_base_url: str | None = None
     custom_api_key: SecretStr | None = None
     custom_model: str | None = None
+
+    @field_validator("workspace_root")
+    @classmethod
+    def _from_repo_root(cls, path: Path) -> Path:
+        return path if path.is_absolute() else ROOT / path
 
     def allowed_host_list(self) -> list[str]:
         return [h.strip() for h in self.allowed_hosts.split(",") if h.strip()]

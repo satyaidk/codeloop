@@ -12,7 +12,7 @@
 
 services:
   hindsight:
-    # Pinned to the server version that matches hindsight-client in requirements.txt; upgrade both together.
+    # Pinned to the server version that matches hindsight-client in backend/requirements.txt; upgrade both together.
     image: ghcr.io/vectorize-io/hindsight:${HINDSIGHT_VERSION:-0.10.2}
     ports:
       - "127.0.0.1:8888:8888" # Hindsight API

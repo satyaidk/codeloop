@@ -18,8 +18,8 @@ export default defineConfig({
     },
   },
   build: {
-    // FastAPI serves whatever lands here (see STATIC_DIR in app/main.py).
-    outDir: "../app/static",
+    // FastAPI serves whatever lands here (see STATIC_DIR in backend/app/main.py).
+    outDir: "../backend/app/static",
     emptyOutDir: true,
   },
   test: {

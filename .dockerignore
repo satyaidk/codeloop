@@ -1,11 +1,11 @@
-.venv
+**/.venv
 .git
 .env
-__pycache__
-.pytest_cache
-.ruff_cache
-tests
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+backend/tests
 docs
 workspace
 frontend/node_modules
-app/static
+backend/app/static
